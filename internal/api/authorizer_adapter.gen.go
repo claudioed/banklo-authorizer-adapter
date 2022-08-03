@@ -19,62 +19,77 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// The country code from ISO 3166 find more at https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
+type CountryCode = string
+
+// The currency code from ISO 4217 find more at https://en.wikipedia.org/wiki/ISO_4217
+type CurrencyCode = string
+
 // GenericError defines model for generic-error.
 type GenericError struct {
 	Code        *string `json:"code,omitempty"`
 	Description *string `json:"description,omitempty"`
 }
 
+// Id defines model for id.
+type Id = string
+
 // RequestCancellation defines model for request-cancellation.
 type RequestCancellation struct {
-	AcquirerCode      *string `json:"acquirer_code,omitempty"`
-	AuthorizationCode *string `json:"authorization_code,omitempty"`
-	CountryCode       *string `json:"country_code,omitempty"`
-	CurrencyCode      *string `json:"currency_code,omitempty"`
-	MerchantCode      *string `json:"merchant_code,omitempty"`
-	PosId             *string `json:"pos_id,omitempty"`
-	ProductId         *string `json:"product_id,omitempty"`
-	TransactionData   *struct {
-		TransactionId   *string `json:"transaction_id,omitempty"`
+	AcquirerCode      *Id `json:"acquirer_code,omitempty"`
+	AuthorizationCode *Id `json:"authorization_code,omitempty"`
+
+	// The country code from ISO 3166 find more at https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
+	CountryCode *CountryCode `json:"country_code,omitempty"`
+
+	// The currency code from ISO 4217 find more at https://en.wikipedia.org/wiki/ISO_4217
+	CurrencyCode    *CurrencyCode `json:"currency_code,omitempty"`
+	MerchantCode    *Id           `json:"merchant_code,omitempty"`
+	TransactionData *struct {
+		TransactionId   *Id     `json:"transaction_id,omitempty"`
 		TransactionType *string `json:"transaction_type,omitempty"`
 	} `json:"transaction_data,omitempty"`
 }
 
 // RequestReversal defines model for request-reversal.
 type RequestReversal struct {
-	AcquirerCode      *string `json:"acquirer_code,omitempty"`
-	AuthorizationCode *string `json:"authorization_code,omitempty"`
-	CountryCode       *string `json:"country_code,omitempty"`
-	CurrencyCode      *string `json:"currency_code,omitempty"`
-	MerchantCode      *string `json:"merchant_code,omitempty"`
-	PosId             *string `json:"pos_id,omitempty"`
-	ProductId         *string `json:"product_id,omitempty"`
-	TransactionData   *struct {
-		TransactionId   *string `json:"transaction_id,omitempty"`
+	AcquirerCode      *Id `json:"acquirer_code,omitempty"`
+	AuthorizationCode *Id `json:"authorization_code,omitempty"`
+
+	// The country code from ISO 3166 find more at https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
+	CountryCode *CountryCode `json:"country_code,omitempty"`
+
+	// The currency code from ISO 4217 find more at https://en.wikipedia.org/wiki/ISO_4217
+	CurrencyCode    *CurrencyCode `json:"currency_code,omitempty"`
+	MerchantCode    *Id           `json:"merchant_code,omitempty"`
+	TransactionData *struct {
+		TransactionId   *Id     `json:"transaction_id,omitempty"`
 		TransactionType *string `json:"transaction_type,omitempty"`
 	} `json:"transaction_data,omitempty"`
 }
 
 // RequestTransaction defines model for request-transaction.
 type RequestTransaction struct {
-	AcquirerCode      *string `json:"acquirer_code,omitempty"`
-	AuthorizationCode *string `json:"authorization_code,omitempty"`
-	CountryCode       *string `json:"country_code,omitempty"`
-	CurrencyCode      *string `json:"currency_code,omitempty"`
-	MerchantCode      *string `json:"merchant_code,omitempty"`
-	PosId             *string `json:"pos_id,omitempty"`
-	ProductId         *string `json:"product_id,omitempty"`
-	TransactionData   *struct {
-		Amount          *int32  `json:"amount,omitempty"`
-		TransactionType *string `json:"transaction_type,omitempty"`
-		WithPassword    *bool   `json:"with_password,omitempty"`
+	AcquirerCode      *Id `json:"acquirer_code,omitempty"`
+	AuthorizationCode *Id `json:"authorization_code,omitempty"`
+
+	// The country code from ISO 3166 find more at https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes
+	CountryCode *CountryCode `json:"country_code,omitempty"`
+
+	// The currency code from ISO 4217 find more at https://en.wikipedia.org/wiki/ISO_4217
+	CurrencyCode    *CurrencyCode `json:"currency_code,omitempty"`
+	MerchantCode    *Id           `json:"merchant_code,omitempty"`
+	TransactionData *struct {
+		Amount          *float32 `json:"amount,omitempty"`
+		TransactionType *string  `json:"transaction_type,omitempty"`
+		WithPassword    *bool    `json:"with_password,omitempty"`
 	} `json:"transaction_data,omitempty"`
 }
 
 // ResponseTransactions defines model for response-transactions.
 type ResponseTransactions struct {
 	RegisteredAt  *time.Time `json:"registered_at,omitempty"`
-	TransactionId *string    `json:"transaction_id,omitempty"`
+	TransactionId *Id        `json:"transaction_id,omitempty"`
 }
 
 // N201Success defines model for 201-success.
@@ -117,10 +132,10 @@ type ServerInterface interface {
 	CreateTransaction(ctx echo.Context) error
 
 	// (POST /transactions/{id}/cancellation)
-	RequestCancellation(ctx echo.Context, id string) error
+	RequestCancellation(ctx echo.Context, id Id) error
 
 	// (POST /transactions/{id}/reversal)
-	RequestReversal(ctx echo.Context, id string) error
+	RequestReversal(ctx echo.Context, id Id) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -141,7 +156,7 @@ func (w *ServerInterfaceWrapper) CreateTransaction(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) RequestCancellation(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "id" -------------
-	var id string
+	var id Id
 
 	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
 	if err != nil {
@@ -157,7 +172,7 @@ func (w *ServerInterfaceWrapper) RequestCancellation(ctx echo.Context) error {
 func (w *ServerInterfaceWrapper) RequestReversal(ctx echo.Context) error {
 	var err error
 	// ------------- Path parameter "id" -------------
-	var id string
+	var id Id
 
 	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
 	if err != nil {
@@ -206,24 +221,26 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
