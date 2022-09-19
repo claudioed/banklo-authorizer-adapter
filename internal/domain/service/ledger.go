@@ -1,11 +1,12 @@
 package service
 
-import "github.com/modern-apis-architecture/banklo-authorizer-adapter/internal/domain"
+import (
+	"context"
+	"github.com/modern-apis-architecture/banklo-authorizer-adapter/internal/domain"
+)
 
 type Ledger interface {
-	Register(t *domain.Transaction) error
-
-	Cancel(t *domain.Transaction) error
-
-	Reversal(t *domain.Transaction) error
+	Register(ctx context.Context, t *domain.Transaction) error
+	Cancel(ctx context.Context, t *domain.Transaction) error
+	Reversal(ctx context.Context, t *domain.Transaction) error
 }

@@ -129,6 +129,10 @@ components:
               type: string
             amount:
               type: number
+            transaction_id:
+              $ref: '#/components/schemas/id'
+            card_id:
+              $ref: '#/components/schemas/id'
         country_code:
           $ref: '#/components/schemas/country_code'
       example:
@@ -140,6 +144,7 @@ components:
           with_password: true
           transaction_type: credit
           amount: 231
+          id: b7679b02-0c02-11ed-8713-0f4e1eec6501
         country_code: BRA
     request-reversal:
       title: request-reversal
@@ -160,6 +165,8 @@ components:
             transaction_type:
               type: string
             transaction_id:
+              $ref: '#/components/schemas/id'
+            card_id:
               $ref: '#/components/schemas/id'
         country_code:
           $ref: '#/components/schemas/country_code'
@@ -192,6 +199,8 @@ components:
               type: string
             transaction_id:
               $ref: '#/components/schemas/id'
+            card_id:
+              $ref: '#/components/schemas/id'
         country_code:
           $ref: '#/components/schemas/country_code'
       example:
@@ -207,6 +216,9 @@ components:
       title: response-transactions
       description: ''
       type: object
+      required:
+        - transaction_id
+        - registered_at
       properties:
         transaction_id:
           $ref: '#/components/schemas/id'

@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+option go_package = "github.com/modern-apis-architecture/banklo-authorizer-adapter/internal/ledger";
+
+import "google/protobuf/timestamp.proto";
+
+service LedgerService {
+  rpc Confirmation(RequestConfirmation) returns (TransactionResponse) {}
+  rpc Cancellation(RequestCancellation) returns (TransactionResponse) {}
+  rpc Reversal(RequestReversal) returns (TransactionResponse) {}
+}
+
+message RequestConfirmation {
+  ConfirmationTransactionData transaction = 1;
+  TransactionType type = 2;
+}
+
+message RequestCancellation {
+  CancellationTransactionData transaction = 1;
+  TransactionType type = 2;
+}
+
+message RequestReversal {
+  ReversalTransactionData transaction = 1;
+  TransactionType type = 2;
+}
+
+enum TransactionType {
+  REVERSAL = 0;
+  CONFIRMATION = 1;
+  CANCELLATION = 2;
+}
+
+enum Result {
+  OK = 0;
+  FAILURE = 1;
+}
+
+message TransactionResponse {
+  string register_id = 1;
+  Result result = 2;
+}
+
+message ConfirmationTransactionData {
+  string external_id = 1;
+  float value = 2;
+  google.protobuf.Timestamp local_time = 3;
+  string merchant_id = 4;
+  string card_id = 6;
+  string currency_code = 7;
+  string authorization_code = 8;
+  string country_code = 9;
+}
+
+message CancellationTransactionData {
+  string external_id = 1;
+  float value = 2;
+  google.protobuf.Timestamp local_time = 3;
+  string merchant_id = 4;
+  string card_id = 5;
+  string currency_code = 7;
+  string authorization_code = 8;
+  string country_code = 9;
+}
+
+message ReversalTransactionData {
+  string external_id = 1;
+  float value = 2;
+  google.protobuf.Timestamp local_time = 3;
+  string merchant_id = 4;
+  string card_id = 6;
+  string currency_code = 7;
+  string authorization_code = 8;
+  string country_code = 9;
+}
+
+
