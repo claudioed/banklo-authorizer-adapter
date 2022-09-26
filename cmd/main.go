@@ -3,10 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/deepmap/oapi-codegen/pkg/middleware"
 	"github.com/labstack/echo/v4"
 	echomiddleware "github.com/labstack/echo/v4/middleware"
 	"github.com/modern-apis-architecture/banklo-authorizer-adapter/internal/api"
+	"net/http"
 	"os"
 )
 
@@ -28,7 +28,11 @@ func main() {
 	handlers, err := BuildAppContainer()
 	e := echo.New()
 	e.Use(echomiddleware.Logger())
-	e.Use(middleware.OapiRequestValidator(swagger))
 	api.RegisterHandlers(e, handlers)
+	e.GET("/health", health)
 	e.Logger.Fatal(e.Start(fmt.Sprintf("0.0.0.0:%d", *port)))
+}
+
+func health(c echo.Context) error {
+	return c.String(http.StatusOK, "UP")
 }
