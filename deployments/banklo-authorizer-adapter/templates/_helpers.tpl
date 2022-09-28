@@ -48,6 +48,8 @@ Selector labels
 {{- define "banklo-authorizer-adapter.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "banklo-authorizer-adapter.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+app: banklo-authorizer-adapter
+version: v1
 {{- end }}
 
 {{/*
