@@ -15,3 +15,7 @@ spec:
             host: {{ include "banklo-authorizer-adapter.fullname" . }}
             subset: v2
           weight: 20
+          fault:
+            delay:
+              fixedDelay: 3s
+              percentage: 100
