@@ -32,7 +32,8 @@ func (tha *TransactionHttpAdapter) CreateTransaction(ctx echo.Context) error {
 		CountryCode:       *t.CountryCode,
 		AuthorizationCode: *t.AuthorizationCode,
 	}
-	err := tha.ledger.Register(context.TODO(), tr)
+	nc := context.WithValue(ctx.Request().Context(), "external-auth", ctx.Request().Header["Authorization"][0])
+	err := tha.ledger.Register(nc, tr)
 	if err != nil {
 		return err
 	}
