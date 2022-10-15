@@ -6,16 +6,11 @@ spec:
   hosts:
     - {{ include "banklo-authorizer-adapter.fullname" . }}
   http:
-    - route:
+    - fault:
+        delay:
+          percent: 50
+          fixedDelay: 3s
+      route:
         - destination:
             host: {{ include "banklo-authorizer-adapter.fullname" . }}
             subset: v1
-          weight: 80
-        - destination:
-            host: {{ include "banklo-authorizer-adapter.fullname" . }}
-            subset: v2
-          weight: 20
-          fault:
-            delay:
-              fixedDelay: 3s
-              percentage: 100
