@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: {{ include "banklo-authorizer-adapter.fullname" . }}
 data:
-  LEDGER_URL: "ledger.payments.svc.cluster.local"
+  LEDGER_URL: "ledger.payments.svc.cluster.local:8888"

@@ -23,7 +23,9 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
-podAnnotations: {}
+podAnnotations:
+  ingress.kubernetes.io/service-upstream: "true"
+  nginx.ingress.kubernetes.io/service-upstream: "true"
 
 podSecurityContext: {}
   # fsGroup: 2000
@@ -41,21 +43,17 @@ service:
   port: 80
 
 ingress:
-  enabled: false
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: "kong"
+    konghq.com/override: banklo-authorizer-adapter-do-not-preserve-host
+    konghq.com/plugins: prometheus-banklo-authorizer-adapter,rl-by-header,oidc-banklo-authorizer-adapter
   hosts:
-    - host: chart-example.local
-      paths:
-      - path: /
-        backend:
-          serviceName: chart-example.local
-          servicePort: 80
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+    - paths:
+        - path: /transactions
+          backend:
+            serviceName: banklo-authorizer-adapter
+            servicePort: 80
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

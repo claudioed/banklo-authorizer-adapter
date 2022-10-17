@@ -6,6 +6,7 @@ import (
 	"github.com/modern-apis-architecture/banklo-authorizer-adapter/internal/api"
 	"github.com/modern-apis-architecture/banklo-authorizer-adapter/internal/domain"
 	"github.com/modern-apis-architecture/banklo-authorizer-adapter/internal/domain/service"
+	log "github.com/sirupsen/logrus"
 	"time"
 )
 
@@ -20,6 +21,7 @@ func NewTransactionHttpAdapter(ledger service.Ledger) *TransactionHttpAdapter {
 func (tha *TransactionHttpAdapter) CreateTransaction(ctx echo.Context) error {
 	t := &api.RequestTransaction{}
 	if err := ctx.Bind(t); err != nil {
+		log.Errorf("invalid payload %v", err)
 		return err
 	}
 	tr := &domain.Transaction{
@@ -31,6 +33,9 @@ func (tha *TransactionHttpAdapter) CreateTransaction(ctx echo.Context) error {
 		CurrencyCode:      *t.CurrencyCode,
 		CountryCode:       *t.CountryCode,
 		AuthorizationCode: *t.AuthorizationCode,
+	}
+	if len(ctx.Request().Header["Authorization"][0]) == 0 {
+		return ctx.JSON(401, nil)
 	}
 	nc := context.WithValue(ctx.Request().Context(), "external-auth", ctx.Request().Header["Authorization"][0])
 	err := tha.ledger.Register(nc, tr)

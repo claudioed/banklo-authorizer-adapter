@@ -8,14 +8,14 @@ package main
 
 import (
 	"github.com/modern-apis-architecture/banklo-authorizer-adapter/internal/adapter"
-	"github.com/modern-apis-architecture/banklo-authorizer-adapter/internal/ledger"
+	"github.com/modern-apis-architecture/banklo-authorizer-adapter/internal/ledger/client"
 )
 
 // Injectors from wire.go:
 
 func BuildAppContainer() (*adapter.TransactionHttpAdapter, error) {
-	ledgerServiceClient := ledger.ProvideLedgerServiceClient()
-	internalLedgerService := ledger.NewInternalLedgerService(ledgerServiceClient)
+	ledgerServiceClient := client.ProvideLedgerServiceClient()
+	internalLedgerService := client.NewInternalLedgerService(ledgerServiceClient)
 	transactionHttpAdapter := adapter.NewTransactionHttpAdapter(internalLedgerService)
 	return transactionHttpAdapter, nil
 }

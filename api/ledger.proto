@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/modern-apis-architecture/banklo-authorizer-adapter/internal/ledger";
+option go_package = "github.com/modern-apis-architecture/ledger/internal/api";
 
 import "google/protobuf/timestamp.proto";
 
